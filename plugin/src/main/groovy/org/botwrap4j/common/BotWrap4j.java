@@ -2,8 +2,10 @@ package org.botwrap4j.common;
 
 import org.botwrap4j.config.BotWrap4jBeanConfig;
 import org.botwrap4j.service.BotWrapService;
+import org.botwrap4j.service.SlackWrapService;
 import org.botwrap4j.service.TelegramWrapService;
 import org.botwrap4j.service.impl.BotWrapServiceImpl;
+import org.botwrap4j.service.impl.SlackWrapServiceImpl;
 import org.botwrap4j.service.impl.TelegramWrapServiceImpl;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -13,7 +15,8 @@ import javax.servlet.http.HttpSession;
 
 public class BotWrap4j {
     protected static final BotWrapService svc = BotWrap4jBeanConfig.getBean(BotWrapServiceImpl.class);
-    protected static final TelegramWrapService telegramSvc = BotWrap4jBeanConfig.getBean(TelegramWrapServiceImpl.class);
+    protected static TelegramWrapService telegramSvc;
+    protected static SlackWrapService slackSvc;
 
     /**
      * @return the HTTP servlet request, class {@link HttpServletRequest}
@@ -59,5 +62,32 @@ public class BotWrap4j {
      */
     public static boolean isEnabled() {
         return svc.isEnabled();
+    }
+
+    /**
+     * @return the current instance botWrapService, class {@link BotWrapService}
+     */
+    public static BotWrapService provider() {
+        return svc;
+    }
+
+    /**
+     * @return the current instance telegramWrapService, class {@link TelegramWrapService}
+     */
+    public static TelegramWrapService telegramProvider() {
+        if (telegramSvc == null) {
+            telegramSvc = BotWrap4jBeanConfig.getBean(TelegramWrapServiceImpl.class);
+        }
+        return telegramSvc;
+    }
+
+    /**
+     * @return the current instance slackWrapService, class {@link SlackWrapService}
+     */
+    public static SlackWrapService slackProvider() {
+        if (slackSvc == null) {
+            slackSvc = BotWrap4jBeanConfig.getBean(SlackWrapServiceImpl.class);
+        }
+        return slackSvc;
     }
 }

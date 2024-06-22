@@ -69,8 +69,7 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
                 .chatId(conf.getChatId())
                 .connection(new TelegramConnectionBuilder()
                         .debugging(conf.isDebugging())
-                        .skip(conf.isEnabled())
-                        .build())
+                        .skip(conf.isEnabled()))
                 .build();
     }
 
@@ -78,15 +77,15 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
      * @param key     - the key configured for telegram clusters,
      * @param message - the message will be sent
      */
-    @SuppressWarnings({"SimplifyOptionalCallChains"})
     @Override
     public void sendMessageSilent(String key, String message) {
-        Optional<TelegramClustersRequest> node = botWrapService.findTelegramNode(key);
-        if (!node.isPresent()) {
+        if (!botWrapService.isEnabled()) {
             return;
         }
-        TelegramClustersRequest conf = node.get();
-        Telegram4j telegram4j = this.transform(conf, message);
+        Telegram4j telegram4j = this.valueOf(key, message);
+        if (telegram4j == null) {
+            return;
+        }
         telegram4j.requestId(BotWrap4j.getCurrentSessionId()).sendMessageSilent();
     }
 
@@ -113,15 +112,15 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
      * @param message   - the message will be sent
      * @param clusterId - the cluster_id
      */
-    @SuppressWarnings({"SimplifyOptionalCallChains"})
     @Override
     public void sendMessageSilent(String key, String clusterId, String message) {
-        Optional<TelegramClustersRequest> node = botWrapService.findTelegramNode(key, clusterId);
-        if (!node.isPresent()) {
+        if (!botWrapService.isEnabled()) {
             return;
         }
-        TelegramClustersRequest conf = node.get();
-        Telegram4j telegram4j = this.transform(conf, message);
+        Telegram4j telegram4j = this.valueOf(key, clusterId, message);
+        if (telegram4j == null) {
+            return;
+        }
         telegram4j.requestId(BotWrap4j.getCurrentSessionId()).sendMessageSilent();
     }
 
