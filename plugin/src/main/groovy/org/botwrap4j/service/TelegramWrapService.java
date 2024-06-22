@@ -13,11 +13,15 @@ public interface TelegramWrapService {
 
     void sendMessageSilent(String key, String message);
 
+    void sendMessageSilentAfterWaitSec(String key, long seconds, String message);
+
     void sendMessageSilent(String key, StringBuilder message);
 
     void sendMessageSilent(String key, Object message);
 
     void sendMessageSilent(String key, String clusterId, String message);
+
+    void sendMessageSilentAfterWaitSec(String key, String clusterId, long seconds, String message);
 
     void sendMessageSilent(String key, String clusterId, StringBuilder message);
 

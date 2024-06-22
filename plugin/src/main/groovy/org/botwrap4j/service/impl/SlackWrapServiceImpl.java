@@ -4,12 +4,14 @@ import org.bot4j.slack.common.Slack4j;
 import org.bot4j.slack.model.builder.SlackConnectionBuilder;
 import org.botwrap4j.common.BotWrap4j;
 import org.botwrap4j.model.request.SlackClustersRequest;
+import org.botwrap4j.model.request.TelegramClustersRequest;
 import org.botwrap4j.service.BotWrapService;
 import org.botwrap4j.service.SlackWrapService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.unify4j.common.Time4j;
 
 import java.util.Map;
 import java.util.Optional;
@@ -89,6 +91,33 @@ public class SlackWrapServiceImpl implements SlackWrapService {
     }
 
     /**
+     * @param key     - the key for slack cluster configs
+     * @param seconds - the second before sending
+     * @param message - the message will be sent, class {@link Map}
+     */
+    @Override
+    public void sendMessageSilentAfterWaitSec(String key, long seconds, Map<String, Object> message) {
+        if (!botWrapService.isEnabled()) {
+            return;
+        }
+        new Thread(() -> {
+            try {
+                Optional<TelegramClustersRequest> node = botWrapService.findTelegramNode(key);
+                if (node.isPresent()) {
+                    if (node.get().isDebugging()) {
+                        logger.info("Schedule '{}' to run {} second(s) before sending message: {}", node.get().getDesc(), seconds, message);
+                    }
+                    Thread.sleep(Time4j.fromSecondToMillis(seconds)); // Wait for N seconds before sending
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                logger.error("Schedule to run {} second(s) before sending message to Slack failure: {} by key: {}", seconds, e.getMessage(), key, e);
+            }
+            this.sendMessageSilent(key, message);
+        }).start();
+    }
+
+    /**
      * @param key       - the key for slack cluster
      * @param clusterId - the cluster_id
      * @param message   - the message will be sent, class {@link Map}
@@ -103,5 +132,33 @@ public class SlackWrapServiceImpl implements SlackWrapService {
             return;
         }
         slack4j.requestId(BotWrap4j.getCurrentSessionId()).sendMessageSilent();
+    }
+
+    /**
+     * @param key       - the key for slack cluster
+     * @param clusterId - the cluster_id
+     * @param seconds   - the second waiting before sending
+     * @param message   - the message will be sent, class {@link Map}
+     */
+    @Override
+    public void sendMessageSilentAfterWaitSec(String key, String clusterId, long seconds, Map<String, Object> message) {
+        if (!botWrapService.isEnabled()) {
+            return;
+        }
+        new Thread(() -> {
+            try {
+                Optional<TelegramClustersRequest> node = botWrapService.findTelegramNode(key, clusterId);
+                if (node.isPresent()) {
+                    if (node.get().isDebugging()) {
+                        logger.info("Schedule '{}' to run {} second(s) before sending message: {}", node.get().getDesc(), seconds, message);
+                    }
+                    Thread.sleep(Time4j.fromSecondToMillis(seconds)); // Wait for N seconds before sending
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                logger.error("Schedule to run {} second(s) before sending message to Slack failure: {} by key: {}", seconds, e.getMessage(), key, e);
+            }
+            this.sendMessageSilent(key, clusterId, message);
+        }).start();
     }
 }

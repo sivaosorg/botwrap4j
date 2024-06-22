@@ -43,7 +43,7 @@ public class BotWrap4j {
             ServletRequestAttributes s = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
             return s.getSessionId();
         } catch (IllegalStateException e) {
-            return String.valueOf(UniqueId4j.getUniqueId());
+            return String.valueOf(UniqueId4j.getUniqueId19());
         }
     }
 
@@ -58,6 +58,9 @@ public class BotWrap4j {
      * @return the session ID, or null if there is no current session
      */
     public static String getSessionId(HttpServletRequest request) {
+        if (request == null) {
+            return String.valueOf(UniqueId4j.getUniqueId19());
+        }
         HttpSession session = request.getSession(false); // Pass false to prevent creating a new session if one does not exist
         return (session != null) ? session.getId() : null;
     }

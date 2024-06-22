@@ -15,5 +15,9 @@ public interface SlackWrapService {
 
     void sendMessageSilent(String key, Map<String, Object> message);
 
+    void sendMessageSilentAfterWaitSec(String key, long seconds, Map<String, Object> message);
+
     void sendMessageSilent(String key, String clusterId, Map<String, Object> message);
+
+    void sendMessageSilentAfterWaitSec(String key, String clusterId, long seconds, Map<String, Object> message);
 }
