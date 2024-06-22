@@ -59,12 +59,13 @@ public class SlackWrapServiceImpl implements SlackWrapService {
             return null;
         }
         if (conf.isDebugging()) {
-            logger.debug("{}", conf);
+            logger.info("{}", conf);
         }
         return new Slack4j.Builder()
                 .channel(conf.getChannelId())
                 .token(conf.getToken())
                 .message(message)
+                .logger(logger)
                 .connection(new SlackConnectionBuilder()
                         .debugging(conf.isDebugging())
                         .skip(!conf.isEnabled()))

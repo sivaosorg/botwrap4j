@@ -43,7 +43,7 @@ public class BotWrap4j {
             ServletRequestAttributes s = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
             return s.getSessionId();
         } catch (IllegalStateException e) {
-            return String.valueOf(UniqueId4j.getUniqueId19());
+            return String.valueOf(UniqueId4j.getUniqueId());
         }
     }
 

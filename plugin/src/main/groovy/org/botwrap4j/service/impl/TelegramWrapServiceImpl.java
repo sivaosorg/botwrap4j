@@ -60,13 +60,14 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
             return null;
         }
         if (conf.isDebugging()) {
-            logger.debug("{}", conf);
+            logger.info("{}", conf);
         }
         return new Telegram4j.Builder()
                 .text(message)
                 .parseMode(conf.getType())
                 .botToken(conf.getToken())
                 .chatId(conf.getChatId())
+                .logger(logger)
                 .connection(new TelegramConnectionBuilder()
                         .debugging(conf.isDebugging())
                         .skip(!conf.isEnabled()))
