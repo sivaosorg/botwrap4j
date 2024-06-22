@@ -9,6 +9,7 @@ import org.botwrap4j.service.impl.SlackWrapServiceImpl;
 import org.botwrap4j.service.impl.TelegramWrapServiceImpl;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.unify4j.common.UniqueId4j;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -38,8 +39,12 @@ public class BotWrap4j {
      * @return the session ID of the current request, or null if no session is associated with the current request context
      */
     public static String getCurrentSessionId() {
-        ServletRequestAttributes s = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        return s.getSessionId();
+        try {
+            ServletRequestAttributes s = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+            return s.getSessionId();
+        } catch (IllegalStateException e) {
+            return String.valueOf(UniqueId4j.getUniqueId19());
+        }
     }
 
     /**

@@ -67,7 +67,7 @@ public class SlackWrapServiceImpl implements SlackWrapService {
                 .message(message)
                 .connection(new SlackConnectionBuilder()
                         .debugging(conf.isDebugging())
-                        .skip(conf.isEnabled()))
+                        .skip(!conf.isEnabled()))
                 .build();
     }
 

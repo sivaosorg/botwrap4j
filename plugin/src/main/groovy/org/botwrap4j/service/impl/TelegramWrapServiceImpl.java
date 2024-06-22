@@ -69,7 +69,7 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
                 .chatId(conf.getChatId())
                 .connection(new TelegramConnectionBuilder()
                         .debugging(conf.isDebugging())
-                        .skip(conf.isEnabled()))
+                        .skip(!conf.isEnabled()))
                 .build();
     }
 
