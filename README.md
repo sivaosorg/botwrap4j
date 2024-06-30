@@ -56,11 +56,19 @@ make jar
 
 ### Upgrading version
 
-- file `gradle.properties`
+- file `gradle.yml`
 
-```sh
-ng.name=botwrap4j
-ng.version=v1.0.0
+```yaml
+#file: noinspection SpellCheckingInspection
+ng:
+  name: botwrap4j
+  version: v1.0.0
+  enabled_link: true # enable compression and attachment of the external libraries
+  jars:
+    - enabled: false # enable compression and attachment of the external libraries
+      source: "./../libs/unify4j-v1.0.0.jar" # lib Jar
+    - enabled: true
+      source: "./../libs/bot4j-v1.0.0.jar"
 ```
 
 ## Integration
