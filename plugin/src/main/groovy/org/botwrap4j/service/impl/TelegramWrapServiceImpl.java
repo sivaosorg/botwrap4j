@@ -1,6 +1,7 @@
 package org.botwrap4j.service.impl;
 
 import org.bot4j.telegram.common.Telegram4j;
+import org.bot4j.telegram.message.MessageBuilder;
 import org.bot4j.telegram.model.builder.TelegramConnectionBuilder;
 import org.botwrap4j.common.BotWrap4j;
 import org.botwrap4j.model.request.TelegramClustersRequest;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.unify4j.common.Class4j;
 import org.unify4j.common.Json4j;
+import org.unify4j.common.String4j;
 import org.unify4j.common.Time4j;
 
 import java.util.Optional;
@@ -92,13 +94,25 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
     }
 
     /**
+     * @param key     - the key configured for telegram clusters
+     * @param message - the message builder, class {@link MessageBuilder}
+     */
+    @Override
+    public void sendMessageSilent(String key, MessageBuilder<?> message) {
+        if (!botWrapService.isEnabled() || message == null) {
+            return;
+        }
+        this.sendMessageSilent(key, message.toString());
+    }
+
+    /**
      * @param key     - the key configured for telegram clusters,
      * @param seconds - the second after waiting
      * @param message - the message will be sent
      */
     @Override
     public void sendMessageSilentAfterWaitSec(String key, long seconds, String message) {
-        if (!botWrapService.isEnabled()) {
+        if (!botWrapService.isEnabled() || seconds < 0 || String4j.isEmpty(message)) {
             return;
         }
         new Thread(() -> {
@@ -116,6 +130,19 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
             }
             this.sendMessageSilent(key, message);
         }).start();
+    }
+
+    /**
+     * @param key     - the key configured for telegram clusters,
+     * @param seconds - the second after waiting
+     * @param message - the message will be sent, class {@link MessageBuilder}
+     */
+    @Override
+    public void sendMessageSilentAfterWaitSec(String key, long seconds, MessageBuilder<?> message) {
+        if (!botWrapService.isEnabled() || seconds < 0 || message == null) {
+            return;
+        }
+        this.sendMessageSilentAfterWaitSec(key, seconds, message.toString());
     }
 
     /**
@@ -143,7 +170,7 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
      */
     @Override
     public void sendMessageSilent(String key, String clusterId, String message) {
-        if (!botWrapService.isEnabled()) {
+        if (!botWrapService.isEnabled() || String4j.isEmpty(clusterId)) {
             return;
         }
         Telegram4j telegram4j = this.valueOf(key, clusterId, message);
@@ -157,11 +184,24 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
      * @param key       - the key configured for telegram clusters,
      * @param message   - the message will be sent
      * @param clusterId - the cluster_id
+     */
+    @Override
+    public void sendMessageSilent(String key, String clusterId, MessageBuilder<?> message) {
+        if (!botWrapService.isEnabled() || String4j.isEmpty(clusterId) || message == null) {
+            return;
+        }
+        this.sendMessageSilent(key, clusterId, message.toString());
+    }
+
+    /**
+     * @param key       - the key configured for telegram clusters,
+     * @param message   - the message will be sent
+     * @param clusterId - the cluster_id
      * @param seconds   - the second after waiting
      */
     @Override
     public void sendMessageSilentAfterWaitSec(String key, String clusterId, long seconds, String message) {
-        if (!botWrapService.isEnabled()) {
+        if (!botWrapService.isEnabled() || String4j.isEmpty(clusterId) || seconds < 0) {
             return;
         }
         new Thread(() -> {
@@ -179,6 +219,20 @@ public class TelegramWrapServiceImpl implements TelegramWrapService {
             }
             this.sendMessageSilent(key, clusterId, message);
         }).start();
+    }
+
+    /**
+     * @param key       - the key configured for telegram clusters,
+     * @param message   - the message will be sent
+     * @param clusterId - the cluster_id
+     * @param seconds   - the second after waiting
+     */
+    @Override
+    public void sendMessageSilentAfterWaitSec(String key, String clusterId, long seconds, MessageBuilder<?> message) {
+        if (!botWrapService.isEnabled() || String4j.isEmpty(clusterId) || seconds < 0 || message == null) {
+            return;
+        }
+        this.sendMessageSilentAfterWaitSec(key, clusterId, seconds, message.toString());
     }
 
     /**
