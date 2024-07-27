@@ -65,10 +65,27 @@ ng:
   version: v1.0.0
   enabled_link: true # enable compression and attachment of the external libraries
   jars:
+    # unify4J: Java 1.8 skeleton library offering a rich toolkit of utility functions
+    # for collections, strings, date/time, JSON, maps, and more.
     - enabled: false # enable compression and attachment of the external libraries
-      source: "./../libs/unify4j-v1.0.0.jar" # lib Jar
+      source: "./../libs/unify4j-v1.0.0.jar"
+    # bot4j: a robust designed for sending notifications to various messaging platforms such as Telegram, Discord, and Slack.
     - enabled: true
       source: "./../libs/bot4j-v1.0.0.jar"
+```
+
+## Add dependencies
+
+```groovy
+// The "spring-core" library, version 5.3.31, is a fundamental component of the Spring Framework,
+// offering essential functionality for dependency injection, bean management, and core utilities to facilitate robust Java application development within the Spring ecosystem.
+implementation group: 'org.springframework', name: 'spring-core', version: '5.3.31'
+// The "spring-boot-starter-web" library, version 2.7.18, is a Spring Boot starter module that facilitates the setup of web applications,
+// providing essential dependencies and configurations for building web-based projects.
+implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.18'
+// The "spring-boot-configuration-processor" library, version 2.7.18,
+// is a Spring Boot module that processes configuration metadata annotations to generate metadata files and aid in auto-configuration of Spring applications.
+implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.7.18'
 ```
 
 ## Integration
