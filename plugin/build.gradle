@@ -188,3 +188,7 @@ dependencies {
     // It's designed to work specifically with the JUnit 5 platform, allowing for advanced testing capabilities.
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.12.4'
 }
+
+test {
+    useJUnitPlatform() // Ensure the JUnit 5 platform is used
+}
