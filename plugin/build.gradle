@@ -187,6 +187,10 @@ dependencies {
     // enabling developers to write unit tests using Mockito's powerful mocking features.
     // It's designed to work specifically with the JUnit 5 platform, allowing for advanced testing capabilities.
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.12.4'
+    // The "spring-boot-starter-aop" library, version 2.7.18, provides support for Aspect-Oriented Programming (AOP) in Spring Boot applications.
+    // AOP enables modularization of cross-cutting concerns such as logging, security, and transactions by allowing aspects to be applied to various parts of the application.
+    // This starter simplifies the setup and configuration of AOP-related functionality, promoting cleaner and more maintainable code by separating concerns effectively.
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.7.18'
 }
 
 test {
