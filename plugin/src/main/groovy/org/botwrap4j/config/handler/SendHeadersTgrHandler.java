@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.unify4j.common.Request4j;
 import org.unify4j.common.String4j;
+import org.unify4j.common.Time4j;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.Map;
 
 @Aspect
@@ -39,13 +41,15 @@ public class SendHeadersTgrHandler {
     @SuppressWarnings({"SpellCheckingInspection"})
     @Around(value = "@annotation(org.botwrap4j.common.annotation.SendHeadersTgr)")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object proceed = joinPoint.proceed();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         SendHeadersTgr annotation = method.getAnnotation(SendHeadersTgr.class);
+        Date start = new Date();
+        Object proceed = joinPoint.proceed();
         if (annotation.disabled()) {
             return proceed;
         }
+        Date end = new Date();
         String key = botAnnotationService.resolveValue(annotation.key());
         String clusterID = botAnnotationService.resolveValue(annotation.clusterId());
         if (String4j.isEmpty(key)) {
@@ -57,13 +61,22 @@ public class SendHeadersTgrHandler {
         builder.icon(TelegramIconMode.BOT)
                 .bold("BotWrap4j Header Extractor")
                 .line(1)
-                .icon(TelegramIconMode.CLOCK).timestamp()
-                .line(2)
                 .bold("SSID:").code(BotWrap4j.getCurrentSessionId())
                 .line()
                 .bold(BotWrap4j.getRequest().getMethod())
                 .code(BotWrap4j.getRequest().getRequestURI())
                 .line()
+                .icon(TelegramIconMode.RIGHT_ARROW_1)
+                .bold("RFT:")
+                .timestamp(start)
+                .line()
+                .icon(TelegramIconMode.RIGHT_ARROW_1)
+                .bold("RT:")
+                .timestamp(end)
+                .line()
+                .icon(TelegramIconMode.CLOCK)
+                .code(Time4j.sinceSmallRecently(end, start))
+                .line(2)
                 .bold("H:").code(headers.size())
                 .line();
         headers.forEach((k, v) -> {
